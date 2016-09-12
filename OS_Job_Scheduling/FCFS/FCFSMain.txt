@@ -1,0 +1,15 @@
+public class FCFSMain {
+
+	
+	public static void main(String[] args) {
+		int arrivalTime[]={1,2,3,4,5};
+        int burstTime[]={2,3,4,5,6};
+        int  job[]={1,2,3,4,5};
+        int num;
+		FCFSDemo demo=new FCFSDemo(arrivalTime,burstTime,job,5);
+		demo.FCFS();
+		demo.solveWaitingTime();
+
+	}
+
+}

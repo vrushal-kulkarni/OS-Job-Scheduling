@@ -1,0 +1,167 @@
+import java.util.Vector;
+
+
+public class FCFSDemo
+{
+    protected int[] arrivalTime;
+    protected int[] burstTime;
+    protected int[] job;
+  
+    protected int numberOfProcess;
+    protected int[] waitingTime;
+    protected int[] finishedTime;
+    protected int[] turnaroundTime; 
+   // protected int averageWT,averageTTsum;
+    protected int jobs;
+
+    public FCFSDemo (int[] aT,int[] bT,int[] Job,int num)
+    {
+        arrivalTime = aT;
+        burstTime = bT;
+        this.job = Job;
+        numberOfProcess = num;
+        waitingTime = new int[numberOfProcess];
+        finishedTime = new int[numberOfProcess];
+        turnaroundTime=new int[numberOfProcess];
+        jobs = 0;
+        int arrivalTime[]={1,2,3,4,5};
+        int burstTime[]={2,3,4,5,6};
+        int  job[]={1,2,3,4,5};
+        
+    }
+    public void FCFS()
+    {
+        int firstCome,tempArrivalTime,tempBurst;
+     //sort processes 
+     for (int i = 0; i < (numberOfProcess - 1); i++) 
+     {
+       for (int j = (i + 1); j < numberOfProcess; j++)
+       {
+            if (arrivalTime[j] < arrivalTime[i]) 
+            {
+            	//System.out.println("Arrival Time="+arrivalTime[i]);
+                firstCome = job[j];
+                job[j] = job[i];
+                job[i] = firstCome;
+                tempArrivalTime = arrivalTime[j];
+                arrivalTime[j] = arrivalTime[i];
+                arrivalTime[i] = tempArrivalTime;
+                tempBurst = burstTime[j];
+                burstTime[j] = burstTime[i];
+                burstTime[i] = tempBurst;
+
+             }
+
+            }
+
+        }
+     System.out.println("\n==Displaying Table of Jobs Sorted According to Arrival Time==");
+     displaySorted();  
+    }
+   public void displaySorted()
+   {
+	   System.out.println("\n------------------------------------");
+
+	   System.out.println("Process | Arrival Time | CPU Burst ");
+
+
+	     for(int y = 0; y < numberOfProcess; y++) 
+	         {
+	             System.out.println("P" + job[y] + "\t\t"
+	             + arrivalTime[y] +"\t      " 
+	             + burstTime[y]);
+
+	         }
+
+	   System.out.println("------------------------------------\n");
+	   
+   }
+   
+   public void display()
+   {
+	   System.out.println("--Displaying table after FCFS implementation--");
+	   System.out.println("\n------------------------------------");
+
+	   System.out.println("Process | Arrival Time | CPU Burst | Waiting Time | Finish Time | Turnaround Time ");
+
+
+	     for(int y = 0; y < numberOfProcess; y++) 
+	         {
+	             System.out.println("P" + job[y] + "\t\t"
+	             + arrivalTime[y] +"\t      " 
+	             + burstTime[y]+"\t\t"+waitingTime[y]+"\t\t"+finishedTime[y]+"\t\t"+turnaroundTime[y]);
+
+	         }
+
+	   System.out.println("------------------------------------\n");
+   }
+   
+
+public void solveWaitingTime()
+{   int ctr=0;
+    Vector<Integer> idleWT = new Vector<Integer>();
+    Vector<Boolean> idle = new Vector<Boolean>();
+    for(int z = 0; z < numberOfProcess; z++)  //run through all processes
+    {
+        if(ctr > arrivalTime[z])                        //if counter is greater than the arrival time
+        {idle.add(Boolean.TRUE);                           //an idle time is not needed hence TRUE
+            for(int k = 0; k < burstTime[z]; k++)       //do burst time of current process
+            {
+
+            ctr++;                              
+
+                }
+            jobs++;
+
+        } 
+        else                                        //if counter is less than arrival time
+        {
+            while(ctr <= arrivalTime[z]) 
+            {
+                if(ctr == arrivalTime[z])                   //if counter is equal to arrivalTime
+                {
+                   jobs++;                                  
+                    for(int j = arrivalTime[z]; j < (arrivalTime[z] + burstTime[z]); j++)//starting from arrival time
+                        {                                                               //do the burst time of process
+                            ctr++;
+
+                        }
+                    idle.add(Boolean.TRUE);             
+                } 
+                else                                    //if not equal to arrival time
+                {
+                    jobs++;             
+                ctr++;                                     //an idle time will be consumed
+                    idle.add(Boolean.FALSE);                //idle has been detected
+                }
+
+            }
+
+            }
+
+        finishedTime[z] = ctr;                  //turn-around time is = to total counter
+        if(z==0)                                //if time is 0
+       idleWT.add(0);                           //IdlewaitingTime of first process is 0
+        else idleWT.add(ctr);                   //else ctr
+}
+     waitingTime[0] = 0;
+     turnaroundTime[0]=0;
+    for(int z = 0;z<numberOfProcess;z++)
+    {  
+        waitingTime[z] = finishedTime[z] - burstTime[z];//compute waiting time
+        turnaroundTime[z]=finishedTime[z]-arrivalTime[z];
+
+    }
+    
+    display();
+
+//debugging purposes
+//   for(int i = 0;i<numberOfProcess;i++)
+//    {   System.out.print("arrival: "+arrivalTime[i]);
+//        System.out.print("burst: "+burstTime[i]);
+//        System.out.print("wait: "+waitingTime[i]);
+//        System.out.print("finished: "+finishedTime[i]);
+//
+//    }
+    }
+}
